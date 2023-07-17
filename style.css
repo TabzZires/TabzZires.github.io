@@ -5,19 +5,27 @@ body{
 }
 .container{
     margin-top: 5px;
+    margin-bottom: 5px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     width: 90%;
+    background-color: rgb(245, 245, 245);
 }
 .container h1{
     background-color: gray;
     border-radius: 5px;
     font-size: 60px;
+    font-family: Arial;
 }
 .container p{
     font-size: 2rem;
     border-radius: 5px;
     background-color: rgb(233, 233, 233);
+}
+.download{
+    width: 100px;
+    height: 40px;
+    text-align: center;
 }
