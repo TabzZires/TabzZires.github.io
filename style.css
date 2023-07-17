@@ -1,5 +1,20 @@
+body{
+    display: flex;
+    justify-content: center;
+    font-family: Arial, Helvetica, sans-serif;
+}
 .container{
     display: flex;
     justify-content: center;
     align-items: center;
+    text-align: center;
+    width: 90%;
+}
+.container h1{
+    background-color: gray;
+    border-radius: 5px;
+    font-size: 60px;
+}
+.container p{
+    font-size: 2rem;
 }
