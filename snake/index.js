@@ -16,14 +16,15 @@ $(document).ready(function() {
     // начальные координаты змейки
     let snake = [{x: 5, y: 5}];
     // направление движения змейки
-    let direction = 'right';
-    let prevdirection = 'right';
+    let direction = 'право';
+    let prevdirection = 'право';
     // координаты яблока
     let apple = generateApple();
     // счетчик очков
     let score = 0;
     let AIon = false;
     let pause = false;
+    let collapse = true;
     // функция для генерации нового яблока
     function generateApple() {
         let newApple = {x: Math.floor(Math.random() * columns), y: Math.floor(Math.random() * rows)};
@@ -56,16 +57,62 @@ $(document).ready(function() {
         
     }
     function zigzagAI(){
-        if(direction === 'right' && snake[0].x === columns-1){
-            direction='down';
-        }else if(direction === 'down' && snake[0].y%2===1){
-            direction='left';
-        }else if(direction === 'left' && snake[0].x===0){
-            direction='down';
-        }else if(direction === 'down' && snake[0].y%2===0){
-            direction='right';
+        if(!collapse){
+            if(direction === 'право' && snake[0].x === columns-1){
+                        direction='вниз';
+                    }else if(direction === 'вниз' && snake[0].y%2===1){
+                        direction='лево';
+                    }else if(direction === 'лево' && snake[0].x===0){
+                        direction='вниз';
+                    }else if(direction === 'вниз' && snake[0].y%2===0){
+                        direction='право';
+                    }
         }
+        if(collapse){
+            if(snake[0].x<apple.x){
+                direction='право';
+            }else if(snake[0].x>apple.x){
+                direction='лево';
+            }else if(snake[0].y>apple.y){
+                direction='вверх';
+            }else if(snake[0].y<apple.y){
+                direction='вниз';
+            }
+        }
+        
     }
+    function createStopwatch() {
+        var startTime;
+        var interval;
+        var elapsedTime = 0;
+    
+        var display = $("<div>").attr("id", "display").text("0.000");
+        display = $("<div>").attr("id", "display").text("0.000");
+        startTime = Date.now() - elapsedTime;
+        interval = setInterval(function printTime() {
+            if(!pause){
+                elapsedTime = Date.now() - startTime;
+                display.text((elapsedTime / 1000).toFixed(3));
+            }
+        }, 10);
+    
+        $('body').append(display);
+        return {
+            reset: function() {
+                clearInterval(interval);
+                elapsedTime = 0;
+                display.text("0.000");
+                startTime = Date.now() - elapsedTime;
+                interval = setInterval(function printTime() {
+                    if(!pause){
+                        elapsedTime = Date.now() - startTime;
+                        display.text((elapsedTime / 1000).toFixed(3));
+                    }
+                }, 10);
+            }
+        };
+    }
+    let stopwatch = createStopwatch();    
     // функция для обновления координат змейки и яблока
     function updateCoordinates() {
         if (AIon){
@@ -77,22 +124,22 @@ $(document).ready(function() {
         }
         let newX = snake[0].x;
         let newY = snake[0].y;
-        if (direction === 'right') {
+        if (direction === 'право') {
             newX++;
             if (newX >= columns) {
                 newX = 0;
             }
-        } else if (direction === 'left') {
+        } else if (direction === 'лево') {
             newX--;
             if (newX < 0) {
                 newX = columns - 1;
             }
-        } else if (direction === 'up') {
+        } else if (direction === 'вверх') {
             newY--;
             if (newY < 0) {
                 newY = rows - 1;
             }
-        } else if (direction === 'down') {
+        } else if (direction === 'вниз') {
             newY++;
             if (newY >= rows) {
                 newY = 0;
@@ -104,15 +151,19 @@ $(document).ready(function() {
             alert(`Поздравляем! Вы выиграли! Ваш счет: ${score}`);
             score=0;
             snake=[{x:5, y:5}, {x:5, y:5}];
-            direction='right';
-            apple=generateApple();    
+            direction='право';
+            apple=generateApple();
+            stopwatch.reset()
         }
-        if (snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)) {
-            alert(`Игра окончена! Ваш счет: ${score}`);
-            score = 0;
-            snake = [{x:5, y:5}, {x:5, y:5}];
-            direction = 'right';
-            apple = generateApple();
+        if(!collapse){
+            if (snake.slice(1).some(segment => segment.x === snake[0].x && segment.y === snake[0].y)) {
+                alert(`Игра окончена! Ваш счет: ${score}`);
+                score = 0;
+                snake = [{x:5, y:5}, {x:5, y:5}];
+                direction = 'право';
+                apple = generateApple();
+                stopwatch.reset()
+            }
         }
         // проверка на съедание яблока
         if (snake[0].x === apple.x && snake[0].y === apple.y) {
@@ -123,22 +174,22 @@ $(document).ready(function() {
         }
         if(prevdirection!=direction){
             $('#directions').append(`<p>${direction}</p>`) 
-            if($('#directions').length>9){
-                $('#directions').childrens().first().pop()
+            if($('#directions').children().length>9){
+                $('#directions').children().first().remove()
             }
         }
         prevdirection = direction;
     }
     // функция для обработки нажатия клавиш
     $(document).keydown(function(event) {
-        if (event.key === 'ArrowRight' && (snake.length===1||direction != 'left')) {
-            direction = 'right';
-        } else if (event.key === 'ArrowLeft' && (snake.length===1||direction != 'right')) {
-            direction = 'left';
-        } else if (event.key === 'ArrowUp' && (snake.length===1||direction != 'down')) {
-            direction = 'up';
-        } else if (event.key === 'ArrowDown' && (snake.length===1||direction != 'up')) {
-            direction = 'down';
+        if (event.key === 'ArrowRight' && (snake.length===1||direction != 'лево')) {
+            direction = 'право';
+        } else if (event.key === 'ArrowLeft' && (snake.length===1||direction != 'право')) {
+            direction = 'лево';
+        } else if (event.key === 'ArrowUp' && (snake.length===1||direction != 'вниз')) {
+            direction = 'вверх';
+        } else if (event.key === 'ArrowDown' && (snake.length===1||direction != 'вверх')) {
+            direction = 'вниз';
         } else if (event.key === 'p') {
             AIon =! AIon
         } else if (event.key === ' '){
