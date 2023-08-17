@@ -17,10 +17,13 @@ $(document).ready(function() {
     let snake = [{x: 5, y: 5}];
     // направление движения змейки
     let direction = 'right';
+    let prevdirection = 'right';
     // координаты яблока
     let apple = generateApple();
     // счетчик очков
     let score = 0;
+    let AIon = false;
+    let pause = false;
     // функция для генерации нового яблока
     function generateApple() {
         let newApple = {x: Math.floor(Math.random() * columns), y: Math.floor(Math.random() * rows)};
@@ -50,11 +53,26 @@ $(document).ready(function() {
         $('td:not(.snake):not(.apple)').addClass('empty_cell');
         // отрисовка счетчика очков
         $('#score').text(`Очки: ${score}`);
+        
+    }
+    function zigzagAI(){
+        if(direction === 'right' && snake[0].x === columns-1){
+            direction='down';
+        }else if(direction === 'down' && snake[0].y%2===1){
+            direction='left';
+        }else if(direction === 'left' && snake[0].x===0){
+            direction='down';
+        }else if(direction === 'down' && snake[0].y%2===0){
+            direction='right';
+        }
     }
     // функция для обновления координат змейки и яблока
     function updateCoordinates() {
+        if (AIon){
+            zigzagAI();
+        }
         // обновление координат змейки
-        if (snake.length === 0) {
+        if (snake.length === 0 || pause) {
             return;
         }
         let newX = snake[0].x;
@@ -103,24 +121,39 @@ $(document).ready(function() {
         } else {
             snake.pop();
         }
+        if(prevdirection!=direction){
+            $('#directions').append(`<p>${direction}</p>`) 
+            if($('#directions').length>9){
+                $('#directions').childrens().first().pop()
+            }
+        }
+        prevdirection = direction;
     }
     // функция для обработки нажатия клавиш
     $(document).keydown(function(event) {
-        if (event.key === 'ArrowRight') {
+        if (event.key === 'ArrowRight' && (snake.length===1||direction != 'left')) {
             direction = 'right';
-        } else if (event.key === 'ArrowLeft') {
+        } else if (event.key === 'ArrowLeft' && (snake.length===1||direction != 'right')) {
             direction = 'left';
-        } else if (event.key === 'ArrowUp') {
+        } else if (event.key === 'ArrowUp' && (snake.length===1||direction != 'down')) {
             direction = 'up';
-        } else if (event.key === 'ArrowDown') {
+        } else if (event.key === 'ArrowDown' && (snake.length===1||direction != 'up')) {
             direction = 'down';
+        } else if (event.key === 'p') {
+            AIon =! AIon
+        } else if (event.key === ' '){
+            pause =! pause
         }
     });
     // добавление счетчика очков
     $('body').append('<div id="score"></div>');
+    $('body').append('<div id="directions"></div>');
     // запуск игры
-    setInterval(function() {
-        updateCoordinates();
-        draw();
-    }, 100);
+    if (!pause){
+        setInterval(function() {
+            updateCoordinates();
+            draw();
+        }, 100);  
+    }
+    
 });
