@@ -24,10 +24,14 @@ $(document).ready(function () {
             btn.click(button.onClick);
             content_button.append(btn);
         });
-        
-        overlay.append(content_button);
+        var aion, collapseon
+        var aion = $("<span>").text(`ИИ:${AIon}`).addClass("menu-var")
+        var collapseon = $("<span>").text(`Врезание в себя:${collapse}`).addClass("menu-var")
+        setInterval(()=>{aion.text(`ИИ: ${AIon}`), collapseon.text(`Врезание в себя: ${collapse}`)}, 100)
+        content_var.append(aion, collapseon)
+        overlay.append(content_button, content_var);
         container.append(overlay);
-
+        
         return {
             show: function () {
                 overlay.show();
@@ -99,18 +103,15 @@ $(document).ready(function () {
             $('td').removeClass();
             $('#display').remove();
             $('#score').remove();
-            // Сброс переменных
-            snake = [{ x: 5, y: 5 }];
-            direction = 'право';
-            apple = generateApple();
-            score = 0;
+            $('#buttons-menu').remove();
+            $('#directions').remove()
+            
+            snake = undefined
+            direction = undefined
+            apple = undefined
+            score = undefined
 
-            // Сброс таймера
-            stopwatch.reset();
-
-            // Показать меню
             menu.show();
-            $('body').append('<div id="score"></div>');
         }
         function zigzagAI() {
             if (!collapse) {
@@ -285,6 +286,11 @@ $(document).ready(function () {
                 pause = !pause;
             }
         });
+        $('body').append('<div id="buttons-menu"></div>')
+        $('#buttons-menu').append(`<button id="pause"  class="buttons">Пауза</button>`, '<button id="AI" class="buttons">ИИ</button>')
+        $('#pause').click(()=>pause =! pause)
+        $('#AI').click(()=>AIon =! AIon)
+
         // добавление счетчика очков
         $('body').append('<div id="score"></div>');
         $('body').append('<div id="directions"></div>');
