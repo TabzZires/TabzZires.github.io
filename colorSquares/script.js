@@ -23,6 +23,8 @@ class Grid{
                     let Cell = $(`<td class='cell' x=${j} y=${i} color=${0}></td>`)
                     Row.append(Cell)
                     Cell.css('background-color', this.colors[Cell.attr('color')])
+                    Cell.css('width', `${Math.floor(500/size)}px`)
+                    Cell.css('height', `${Math.floor(500/size)}px`)
                 }
             }
         }
@@ -53,6 +55,6 @@ class Grid{
 $(document).ready(()=>{
     
     let grid = new Grid()
-    grid.createGrid(4)
+    grid.createGrid(5)
     setInterval(grid.colorChanging(), 100)
 })
