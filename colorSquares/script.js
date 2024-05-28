@@ -73,21 +73,17 @@ class Grid{
     const options = {
         width: this.field.width(),
         height: this.field.height(),
-        pixelRatio: window.devicePixelRatio || 1, // Использовать разрешение экрана для более четкого изображения
-        allowTaint: true, // Разрешить рендеринг изображений из других источников
-        useCORS: true, // Использовать CORS для загрузки изображений из других источников
+        pixelRatio: window.devicePixelRatio || 1,
+        allowTaint: true,
+        useCORS: true,
     };
 
     html2canvas(fieldClone[0], options).then(canvas => {
         const dataURL = canvas.toDataURL('image/png');
         fieldClone.remove();
-
-        // Создать ссылку для скачивания
         const downloadLink = document.createElement('a');
         downloadLink.download = 'grid-screenshot.png';
         downloadLink.href = dataURL;
-
-        // Триггер клика на ссылке для начала скачивания
         document.body.appendChild(downloadLink);
         downloadLink.click();
         document.body.removeChild(downloadLink);
