@@ -14,8 +14,10 @@ class Grid{
               }
             this.field = $('<table class="field"></table>')
             $('body').append(this.field)
+            this.colorChanging = this.colorChanging.bind(this);
         }
         createGrid(size){
+            this.field.children().remove();
             for(let i=0; i<size; i++){
                 let Row = $(`<tr class='row'></tr>`);
                 this.field.append(Row)
@@ -27,8 +29,10 @@ class Grid{
                     Cell.css('height', `${Math.floor(500/size)}px`)
                 }
             }
+            this.colorChanging();
         }
         colorChanging(){
+            $('.cell').off('contextmenu mousedown');
             $('.cell').on('contextmenu', event=>event.preventDefault())
             $('.cell').mousedown((event) => {
                 if(event.button === 0){
@@ -51,10 +55,53 @@ class Grid{
                 
               });
         }
+        destroyGrid(){
+            this.field.children().remove()
+        }
+        takeScreenshot() {
+    const canvas = document.getElementById('gridCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Очистить canvas
+    canvas.width = this.field.width();
+    canvas.height = this.field.height();
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Рендерить сетку на canvas
+    const fieldClone = this.field.clone();
+    $('body').append(fieldClone);
+    const options = {
+        width: this.field.width(),
+        height: this.field.height(),
+        pixelRatio: window.devicePixelRatio || 1, // Использовать разрешение экрана для более четкого изображения
+        allowTaint: true, // Разрешить рендеринг изображений из других источников
+        useCORS: true, // Использовать CORS для загрузки изображений из других источников
+    };
+
+    html2canvas(fieldClone[0], options).then(canvas => {
+        const dataURL = canvas.toDataURL('image/png');
+        fieldClone.remove();
+
+        // Создать ссылку для скачивания
+        const downloadLink = document.createElement('a');
+        downloadLink.download = 'grid-screenshot.png';
+        downloadLink.href = dataURL;
+
+        // Триггер клика на ссылке для начала скачивания
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    });
+}
     }
+let grid;
 $(document).ready(()=>{
-    
-    let grid = new Grid()
+    grid = new Grid()
     grid.createGrid(5)
+    $('.btn-menu').children().click(function() {
+        if (typeof grid[$(this).data('action')] === 'function') {
+            grid[$(this).data('action')]($('.size').val());
+        }
+    });
     setInterval(grid.colorChanging(), 100)
 })

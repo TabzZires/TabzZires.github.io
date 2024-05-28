@@ -6,9 +6,16 @@
     <title>Document</title>
     <link rel="stylesheet" href="style.css">
     <script src="https://code.jquery.com/jquery-3.7.0.min.js"></script>
+    <script src="html2canvas.min.js"></script>
     <script src="script.js"></script>
 </head>
 <body>
-    <button class="red">ReD</button>
+    <canvas id="gridCanvas" style="display: none;"></canvas>
+    <input class='size' type="range" min="1" max="50">
+    <div class="btn-menu">
+        <button class="destroy" data-action="destroyGrid">Destroy</button>
+        <button class="create" data-action="createGrid">Create grid</button>
+        <button class="screenshot" data-action="takeScreenshot">Screen</button>
+    </div>
 </body>
 </html>

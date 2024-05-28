@@ -13,8 +13,3 @@ body{
     height: var(--size);
     padding: 0%;
 }
-.red{
-    position: fixed;
-    width: 20px;
-    height: 20px;
-}
