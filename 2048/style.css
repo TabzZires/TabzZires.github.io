@@ -1,0 +1,37 @@
+body,html{
+    margin: 0;
+}
+.field{
+    --borderSize: 2px;
+    --borderRadius: 5%;
+    border-spacing: 0;
+    position: fixed;
+    left: 30%;
+    top: 7%;
+}
+.cell{
+    width: 200px;
+    height: 200px;
+    padding: 0;
+    border-right: var(--borderSize) black solid;
+    border-bottom: var(--borderSize) black solid;
+    text-align: center;
+}
+.cell[x='0']{
+    border-left: var(--borderSize) black solid;
+}
+.row[y="0"]>.cell{
+    border-top: var(--borderSize) black solid;
+}
+.row[y="0"]>.cell[x='0']{
+    border-top-left-radius: var(--borderRadius);
+}
+.row[y="0"]>.cell[x='3']{
+    border-top-right-radius: var(--borderRadius);
+}
+.row[y="3"]>.cell[x='0']{
+    border-bottom-left-radius: var(--borderRadius);
+}
+.row[y="3"]>.cell[x='3']{
+    border-bottom-right-radius: var(--borderRadius);
+}
