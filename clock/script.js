@@ -14,5 +14,5 @@ if((new Date()).getMonth()>=8 && (new Date()).getMonth()<=10){
 }
 setInterval(()=>{timer.text((new Date()).toLocaleTimeString())}, 1000)
 setInterval(()=>{
-    sun.css("transform",`translate(calc(200px*cos(${15*(new Date().getHours())}deg)), calc(-200px*sin(${15*(new Date().getHours())}deg)))`);      
+    sun.css("transform",`translate(calc(-200px*cos(${15*(new Date().getHours())}deg)), calc(-200px*sin(${15*(new Date().getHours())}deg)))`);      
 }, 60000);
