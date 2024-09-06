@@ -2,7 +2,7 @@ let timer = $(".clockTimer");
 let clock = $(".clock")
 let sun = $("<div class='sun'></div>")
 clock.append(sun)
-sun.css("transform",`translate(calc(200px*cos(${15*(new Date().getHours())}deg)), calc(-200px*sin(${15*(new Date().getHours())}deg)))`);      
+sun.css("transform",`translate(calc(-200px*cos(${15*(new Date().getHours())}deg)), calc(-200px*sin(${15*(new Date().getHours())}deg)))`);      
 if((new Date()).getMonth()>=8 && (new Date()).getMonth()<=10){
     clock.css("background","radial-gradient(circle, rgba(255,227,150,1) 40%, rgba(255,187,0,1) 100%)")
 }else if((new Date()).getMonth()>=2 && (new Date()).getMonth()<=4){
