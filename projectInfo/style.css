@@ -14,9 +14,10 @@ body, html{
 }
 .mix{
     width: 250px;
-    height: 200px;
+    min-height: 200px;
     margin: 5px;
     display: inline-block;
+    font-size: 16px;
 }
 .card{
     height: 100%;

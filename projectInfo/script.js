@@ -1,26 +1,39 @@
-
-
 $(document).ready(()=>{
-    let container = $('.container')
-    $.getJSON('themes.json', function(data) {
-        for(i=0;i<Object.keys(data).length;i++){
-            if ($('.controls').children().filter(()=>{return $(this).attr('data-filter')==Object.values(data)[i]['class']}).length==0) {
-                console.log($('.controls').children().filter(()=>{return $(this).attr('data-filter')==Object.values(data)[i]['class']}).length);
-                $('.controls').children().each(()=>{console.log($(this).attr('data-filter'))})
-                
-                $('.controls').append(`<button type="button" class="btn btn-secondary" data-filter=".${Object.values(data)[i]['class']}">${Object.values(data)[i]['class']}</button>`)
-            }
-            container.append(`<div class="mix ${Object.values(data)[i]["class"]}">
-            <div class="card">
-            <div class="card-body">
-            <h5 class="card-title">${Object.values(data)[i]['name']}</h5>
-            <p class="card-text">Description</p>
-            </div>
-            <div class="card-footer"><button class="btn btn-primary">Подробнее</button></div>
-            </div>
-            </div>`)
-        }
-        let mixer = mixitup(container) 
-    })
-    
-})
+  let container = $('.container');
+  $.getJSON('themes.json', function(data) {
+      for(let i of data.tags){
+        $('.controls').append(`<button type="button" class="control btn btn-secondary" data-toggle=".${i}">${i}</button>`);
+      }
+      for(let i = 0; i < Object.keys(data).length-1; i++){          
+          container.append(`<div class="mix ${Object.values(data)[i]["class"]}">
+              <div class="card">
+                  <div class="card-body">
+                      <h5 class="card-title">${Object.values(data)[i]['name']}</h5>
+                      <p class="card-text">${Object.values(data)[i]['shortDesc']}</p>
+                  </div>
+                  <div class="card-footer">
+                      <button class="btn btn-primary" data-bs-target="#modal${i}" data-bs-toggle="modal">Подробнее</button>
+                      <div class="modal" id="modal${i}">
+                          <div class="modal-dialog">
+                              <div class="modal-content">
+                                  <div class="modal-header">
+                                      <h5 class="modal-title">${Object.values(data)[i]['class']}</h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                  </div>
+                                  <div class="modal-body">
+                                      <p>${Object.values(data)[i]['LongDesc']}</p>
+                                  </div>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>`);
+          
+          $(`#modal${i}`).modal({
+              show: false
+          });
+      }
+      let mixer = mixitup(container, {controls:{toggleLogic: 'and'}});
+  });
+});
